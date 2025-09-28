@@ -68,6 +68,30 @@ Available settings:
 - `API_USERNAME` - API username (default: admin)
 - `API_PASSWORD` - API password (default: password123)
 
+### Testing Different Environments
+
+**Local testing:**
+```bash
+# Test production (default)
+pytest tests/ -v -s -n0
+
+# Test development environment
+TEST_ENV=dev pytest tests/ -v -s -n0
+
+# Set environment for entire session
+export TEST_ENV=dev
+pytest tests/ -v -s -n0
+
+# Use .env file for persistent settings
+echo "TEST_ENV=dev" > .env
+pytest tests/ -v -s -n0
+```
+
+**Available environments:**
+- `prod` (default) - https://restful-booker.herokuapp.com
+- `dev` - https://dev.restful-booker.herokuapp.com  
+- `staging` - https://staging.restful-booker.herokuapp.com
+
 ## Project Structure
 
 ```
