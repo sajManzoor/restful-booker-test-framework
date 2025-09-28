@@ -4,10 +4,6 @@ on:
   schedule:
     # Run Monday to Friday at 12:00 PM UTC
     - cron: '0 12 * * 1-5'
-  push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
   workflow_dispatch:  # Allows manual triggering
 
 jobs:
