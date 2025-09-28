@@ -110,10 +110,10 @@ class BugReporter:
         return f"{readable_name} should work correctly"
     
     def generate_excel_report(self, filename: str = None):
-        """Generate enhanced Excel bug report"""
+        """Generate Excel bug report"""
         if not filename:
             timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
-            filename = f"reports/enhanced_bug_report_{timestamp}.xlsx"
+            filename = f"reports/bug_report_{timestamp}.xlsx"
         
         os.makedirs(os.path.dirname(filename), exist_ok=True)
         
@@ -182,5 +182,5 @@ class BugReporter:
             ws.column_dimensions[column_letter].width = adjusted_width
         
         wb.save(filename)
-        logger.info(f"Enhanced Excel bug report generated: {filename}")
+        logger.info(f"Excel bug report generated: {filename}")
         return filename

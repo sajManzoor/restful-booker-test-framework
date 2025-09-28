@@ -46,11 +46,15 @@ coverage.xml
 *.cover
 .hypothesis/
 
-# Reports
+# Reports (ignore all generated reports)
 reports/
 *.html
 *.xlsx
 *.log
+
+# Exception: Keep sample reports for documentation
+!reports/sample_*
+!reports/README.md
 
 # OS
 .DS_Store
