@@ -1,36 +1,40 @@
-from typing import Dict, Any
+from typing import Dict, Any, Union
+from models.booking import Booking
 
 
 class APIAssertions:
     @staticmethod
-    def assert_booking_structure(booking_data: Dict[str, Any]):
+    def assert_booking_structure(booking_data: Booking):
         """Validate booking data has required structure"""
-        required_fields = ['firstname', 'lastname', 'totalprice', 'depositpaid', 'bookingdates']
-        for field in required_fields:
-            assert field in booking_data, f"Missing required field: {field}"
-        
-        # Validate bookingdates structure
-        if 'bookingdates' in booking_data:
-            booking_dates = booking_data['bookingdates']
-            assert 'checkin' in booking_dates, "Missing checkin date"
-            assert 'checkout' in booking_dates, "Missing checkout date"
-    
+        assert booking_data.firstname is not None
+        assert booking_data.lastname is not None
+        assert booking_data.totalprice is not None
+        assert booking_data.depositpaid is not None
+        assert booking_data.bookingdates is not None
+        assert booking_data.bookingdates.checkin is not None
+        assert booking_data.bookingdates.checkout is not None
+
     @staticmethod
-    def assert_booking_equality(booking1: Dict[str, Any], booking2: Dict[str, Any], ignore_fields: list = None):
+    def assert_booking_equality(booking1: Union[Dict[str, Any], Booking], booking2: Union[Dict[str, Any], Booking], ignore_fields: list = None):
         """Compare two booking objects for equality, optionally ignoring certain fields"""
         ignore_fields = ignore_fields or []
-        for key, value in booking1.items():
+
+        # Convert models to dicts for comparison
+        dict1 = booking1.to_dict() if isinstance(booking1, Booking) else booking1
+        dict2 = booking2.to_dict() if isinstance(booking2, Booking) else booking2
+
+        for key, value in dict1.items():
             if key not in ignore_fields:
-                assert key in booking2, f"Field '{key}' missing in second booking"
-                assert booking2[key] == value, f"Field '{key}' mismatch: {value} != {booking2[key]}"
-    
+                assert key in dict2, f"Field '{key}' missing in second booking"
+                assert dict2[key] == value, f"Field '{key}' mismatch: {value} != {dict2[key]}"
+
     @staticmethod
     def assert_auth_token(token):
         """Validate authentication token format and content"""
         assert token is not None, "Token should not be None"
         assert len(token) > 0, "Token should not be empty"
         assert isinstance(token, str), "Token should be a string"
-    
+
     @staticmethod
     def assert_booking_id(booking_id):
         """Validate booking ID format and value"""

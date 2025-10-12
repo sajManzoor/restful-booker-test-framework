@@ -14,7 +14,7 @@ bug_reporter = BugReporter()
 def setup_test_session():
     """Setup test session"""
     yield
-    
+
     # Generate reports at end of session only if there are bugs
     if bug_reporter.bugs:
         bug_reporter.generate_excel_report()
@@ -29,7 +29,7 @@ def config():
     return Config()
 
 
-@pytest.fixture(scope="session") 
+@pytest.fixture(scope="session")
 def api_client(config):
     """Base API client fixture"""
     return BookingAPIClient(config)
@@ -39,17 +39,18 @@ def api_client(config):
 def booking_factory(api_client):
     """Factory fixture for creating bookings with automatic cleanup"""
     created_bookings = []
-    
+
     def _create_booking(booking_data=None):
         if booking_data is None:
             booking_data = BookingTestData.valid_booking()
-        
-        booking_id = api_client.create_booking(booking_data)
+
+        booking_response = api_client.create_booking(booking_data)
+        booking_id = booking_response.bookingid
         created_bookings.append(booking_id)
-        return booking_id, booking_data
-    
+        return booking_response, booking_data
+
     yield _create_booking
-    
+
     # Cleanup all created bookings
     for booking_id in created_bookings:
         try:
@@ -70,7 +71,7 @@ def pytest_runtest_makereport(item, call):
     outcome = yield
     rep = outcome.get_result()
     setattr(item, f"rep_{rep.when}", rep)
-    
+
     # Only process failures in the call phase (actual test execution)
     if call.when == "call" and rep.failed:
         # Add bug automatically using the test item for better description
